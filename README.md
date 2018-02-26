@@ -1,5 +1,5 @@
 # AdvancedChat
-##### AdvancedChat is Unturned plugin for Rocket.This plugin is similar to the ChatControl plugin, but AdvancedChat is modified version of ChatControl, I did not want to steal the Chatcontrol plugin idea, I just modified it!
+##### AdvancedChat is Unturned plugin for Rocket.This plugin is similar to the ChatControl plugin, but AdvancedChat is modified version of ChatControl, I did not want to steal the ChatControl plugin idea, I just modified it!
 ---
 ## Commands
 - ### Mute command
@@ -55,6 +55,6 @@
   - player_not_found - error message, if you incorrect define player in /mute or /unmute commands
   - wrong_time - errror message, if you incorrect define time in /mute command (eg string instead number)
 <hr>
-Plugin AdvancedChat created by Brinza Bezrukoff
-My Vk page: https://vk.com/brinza888
-My email: bezrukoff888@gmail.com
+- Plugin AdvancedChat created by Brinza Bezrukoff
+- My Vk page: https://vk.com/brinza888
+- My email: bezrukoff888@gmail.com
