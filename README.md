@@ -54,7 +54,7 @@
     - {1} is warnings that player need to reach for get **automute**
   - player_not_found - error message, if you incorrect define player in /mute or /unmute commands
   - wrong_time - errror message, if you incorrect define time in /mute command (eg string instead number)
-
+<hr>
 - Plugin AdvancedChat created by Brinza Bezrukoff
 - My Vk page: https://vk.com/brinza888
 - My email: bezrukoff888@gmail.com
