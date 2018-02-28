@@ -123,7 +123,12 @@ namespace AdvancedChat
                 {
                     if ((DateTime.Now - pair.Value).TotalSeconds >= MutedPlayers[pair.Key])
                     {
-                        UnmutePlayer(UnturnedPlayer.FromCSteamID(pair.Key));
+                        UnturnedPlayer player = UnturnedPlayer.FromCSteamID(pair.Key);
+                        if (player == null)
+                        {
+                            continue;
+                        }
+                        UnmutePlayer(player);
                         break;
                     }
                 }
