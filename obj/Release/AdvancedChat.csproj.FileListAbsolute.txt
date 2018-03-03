@@ -20,3 +20,14 @@ C:\Users\bezru\Desktop\AdvancedChat repo\AdvancedChat\bin\Release\UnityEngine.dl
 C:\Users\bezru\Desktop\AdvancedChat repo\AdvancedChat\obj\Release\AdvancedChat.csprojResolveAssemblyReference.cache
 C:\Users\bezru\Desktop\AdvancedChat repo\AdvancedChat\obj\Release\AdvancedChat.dll
 C:\Users\bezru\Desktop\AdvancedChat repo\AdvancedChat\obj\Release\AdvancedChat.pdb
+C:\Users\bezru\Desktop\AdvancedChatRepo\AdvancedChat\bin\Release\AdvancedChat.dll
+C:\Users\bezru\Desktop\AdvancedChatRepo\AdvancedChat\bin\Release\AdvancedChat.pdb
+C:\Users\bezru\Desktop\AdvancedChatRepo\AdvancedChat\bin\Release\Assembly-CSharp-firstpass.dll
+C:\Users\bezru\Desktop\AdvancedChatRepo\AdvancedChat\bin\Release\Assembly-CSharp.dll
+C:\Users\bezru\Desktop\AdvancedChatRepo\AdvancedChat\bin\Release\Rocket.API.dll
+C:\Users\bezru\Desktop\AdvancedChatRepo\AdvancedChat\bin\Release\Rocket.Core.dll
+C:\Users\bezru\Desktop\AdvancedChatRepo\AdvancedChat\bin\Release\Rocket.Unturned.dll
+C:\Users\bezru\Desktop\AdvancedChatRepo\AdvancedChat\bin\Release\UnityEngine.dll
+C:\Users\bezru\Desktop\AdvancedChatRepo\AdvancedChat\obj\Release\AdvancedChat.csprojResolveAssemblyReference.cache
+C:\Users\bezru\Desktop\AdvancedChatRepo\AdvancedChat\obj\Release\AdvancedChat.dll
+C:\Users\bezru\Desktop\AdvancedChatRepo\AdvancedChat\obj\Release\AdvancedChat.pdb
