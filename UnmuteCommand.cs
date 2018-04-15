@@ -31,7 +31,7 @@ namespace AdvancedChat
             }
             else
             {
-                AdvancedChatPlugin.Instance.UnmutePlayer(target);
+                AdvancedChatPlugin.Instance.UnmutePlayer(target.CSteamID);
             }
         }
 

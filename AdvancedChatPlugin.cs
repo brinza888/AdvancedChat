@@ -48,7 +48,7 @@ namespace AdvancedChat
             Rocket.Core.Logging.Logger.Log("Warnings before mute " + Configuration.Instance.WarningsBeforeMute);
             Rocket.Core.Logging.Logger.Log("AutoMute duration " + Configuration.Instance.AutoMuteDuration);
             Rocket.Core.Logging.Logger.Log("AutoBan duration " + Configuration.Instance.AutoBanDuration);
-            Rocket.Core.Logging.Logger.Log("Created by Brinza Bezrkoff");
+            Rocket.Core.Logging.Logger.Log("Created by Brinza Bezrukoff");
             Rocket.Core.Logging.Logger.Log("About any issues write me on email");
             Rocket.Core.Logging.Logger.Log("My vk page: https://vk.com/brinza888");
             Rocket.Core.Logging.Logger.Log("My email: bezrukoff888@gmail.com");
@@ -94,7 +94,7 @@ namespace AdvancedChat
             {
                 if (Configuration.Instance.WarningsBeforeMute > 0 && WarnedPlayers.ContainsKey(player.CSteamID) && WarnedPlayers[player.CSteamID] == warningsBeforeMute)
                 {
-                    MutePlayer(player, Configuration.Instance.AutoMuteDuration);
+                    MutePlayer(player.CSteamID, Configuration.Instance.AutoMuteDuration);
                 }
             }
 
@@ -123,44 +123,67 @@ namespace AdvancedChat
                 {
                     if ((DateTime.Now - pair.Value).TotalSeconds >= MutedPlayers[pair.Key])
                     {
-                        UnturnedPlayer player = UnturnedPlayer.FromCSteamID(pair.Key);
-                        if (player is UnturnedPlayer)
-                        {
-                            UnmutePlayer(player);
-                            break;
-                        }
+                        UnmutePlayer(pair.Key);
+                        break;
                     }
                 }
             }
         }
 
-        public void MutePlayer(UnturnedPlayer player, uint duration)
+        public void MutePlayer(CSteamID playerID, uint duration)
         {
-            MutedPlayers.Add(player.CSteamID, duration);
-            MutedPlayersTimeStamps.Add(player.CSteamID, DateTime.Now);
+            MutedPlayers.Add(playerID, duration);
+            MutedPlayersTimeStamps.Add(playerID, DateTime.Now);
+            UnturnedPlayer player = UnturnedPlayer.FromCSteamID(playerID);
             if (Configuration.Instance.BroadcastMute)
             {
-                UnturnedChat.Say(Translate("mute_broadcast", player.CharacterName, duration), UnityEngine.Color.magenta);
+                if (player != null)
+                {
+                    string name = player.CharacterName;
+                }
+                else
+                {
+                    string name = "SteamID:" + playerID.ToString();
+                }
+                UnturnedChat.Say(Translate("mute_broadcast", name, duration), UnityEngine.Color.magenta);
             }
         }
 
-        public void MutePlayer(UnturnedPlayer player)
+        public void MutePlayer(CSteamID playerID)
         {
-            MutedPlayers.Add(player.CSteamID, 4000000000);
-            MutedPlayersTimeStamps.Add(player.CSteamID, DateTime.Now);
+            MutedPlayers.Add(playerID, 4000000000);
+            MutedPlayersTimeStamps.Add(playerID, DateTime.Now);
+            UnturnedPlayer player = UnturnedPlayer.FromCSteamID(playerID);
             if (Configuration.Instance.BroadcastMute)
             {
-                UnturnedChat.Say(Translate("permamute_broadcast", player.CharacterName), UnityEngine.Color.magenta);
+                if (player != null)
+                {
+                    string name = player.CharacterName;
+                }
+                else
+                {
+                    string name = "SteamID:" + playerID.ToString();
+                }
+                UnturnedChat.Say(Translate("permamute_broadcast", name), UnityEngine.Color.magenta);
             }
         }
 
-        public void UnmutePlayer(UnturnedPlayer player)
+        public void UnmutePlayer(CSteamID playerID)
         {
-            MutedPlayers.Remove(player.CSteamID);
-            MutedPlayersTimeStamps.Remove(player.CSteamID);
+            MutedPlayers.Remove(playerID);
+            MutedPlayersTimeStamps.Remove(playerID);
+            UnturnedPlayer player = UnturnedPlayer.FromCSteamID(playerID);
             if (Configuration.Instance.BroadcastUnmute)
             {
-                UnturnedChat.Say(Translate("unmute_broadcast", player.CharacterName), UnityEngine.Color.magenta);
+                if (player != null)
+                {
+                    string name = player.CharacterName;
+                }
+                else
+                {
+                    string name = "SteamID:" + playerID.ToString();
+                }
+                UnturnedChat.Say(Translate("unmute_broadcast", name), UnityEngine.Color.magenta);
             }
         }
 

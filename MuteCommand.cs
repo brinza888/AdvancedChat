@@ -33,14 +33,14 @@ namespace AdvancedChat
             {
                 if (command.Length < 2)
                 {
-                    AdvancedChatPlugin.Instance.MutePlayer(target);
+                    AdvancedChatPlugin.Instance.MutePlayer(target.CSteamID);
                 }
                 else
                 {
                     uint duration;
                     if (uint.TryParse(command[1], out duration))
                     {
-                        AdvancedChatPlugin.Instance.MutePlayer(target, duration);
+                        AdvancedChatPlugin.Instance.MutePlayer(target.CSteamID, duration);
                     }
                     else
                     {
