@@ -1,17 +1,17 @@
-﻿using System;
+﻿using Rocket.API;
+using Rocket.API.Collections;
+using Rocket.Core.Plugins;
+using Rocket.Unturned.Chat;
+using Rocket.Unturned.Events;
+using Rocket.Unturned.Player;
+using SDG.Unturned;
+using Steamworks;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Rocket.Core.Plugins;
-using Rocket.Core.Logging;
-using Rocket.API;
-using Rocket.API.Collections;
-using Rocket.Unturned.Chat;
-using Rocket.Unturned.Events;
-using SDG.Unturned;
-using Rocket.Unturned.Player;
+using System.Threading.Tasks;
 using UnityEngine;
-using Steamworks;
 
 namespace AdvancedChat
 {
@@ -21,7 +21,7 @@ namespace AdvancedChat
         private Dictionary<CSteamID, DateTime> MutedPlayersTimeStamps = new Dictionary<CSteamID, DateTime>();
         private Dictionary<CSteamID, uint> MutedPlayers = new Dictionary<CSteamID, uint>();
         private Dictionary<CSteamID, int> WarnedPlayers = new Dictionary<CSteamID, int>();
- 
+
         public override TranslationList DefaultTranslations
         {
             get
@@ -62,7 +62,7 @@ namespace AdvancedChat
             int waringsBeforeKick = Configuration.Instance.WarningsBeforeKick;
             int warningsBeforeBan = Configuration.Instance.WarningsBeforeBan;
 
-            if(MutedPlayers.ContainsKey(player.CSteamID))
+            if (MutedPlayers.ContainsKey(player.CSteamID))
             {
                 long last = MutedPlayersTimeStamps[player.CSteamID].Second + MutedPlayers[player.CSteamID] - DateTime.Now.Second;
                 UnturnedChat.Say(player, Translate("you_in_mute", last), UnityEngine.Color.red);
@@ -72,11 +72,11 @@ namespace AdvancedChat
 
             if (!player.HasPermission("AdvancedChat.BypassBadWords"))
             {
-                foreach(string badword in Configuration.Instance.WordsBlackList)
+                foreach (string badword in Configuration.Instance.WordsBlackList)
                 {
                     if (message.ToLower().Contains(badword.ToLower()))
                     {
-                        if(WarnedPlayers.ContainsKey(player.CSteamID))
+                        if (WarnedPlayers.ContainsKey(player.CSteamID))
                         {
                             WarnedPlayers[player.CSteamID] += 1;
                         }
