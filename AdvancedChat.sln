@@ -1,7 +1,9 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual C# Express 2010
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdvancedChat", "AdvancedChat.csproj", "{19FF783E-75C9-44E9-BEC4-CC4A5DC3120C}"
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27703.2035
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdvancedChat", "AdvancedChat.csproj", "{75C4E947-B70C-4376-8CCF-FCBC2D649AAE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -9,12 +11,15 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{19FF783E-75C9-44E9-BEC4-CC4A5DC3120C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{19FF783E-75C9-44E9-BEC4-CC4A5DC3120C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{19FF783E-75C9-44E9-BEC4-CC4A5DC3120C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{19FF783E-75C9-44E9-BEC4-CC4A5DC3120C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{75C4E947-B70C-4376-8CCF-FCBC2D649AAE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{75C4E947-B70C-4376-8CCF-FCBC2D649AAE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{75C4E947-B70C-4376-8CCF-FCBC2D649AAE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{75C4E947-B70C-4376-8CCF-FCBC2D649AAE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {A4C0C7EE-F9B4-43F9-962E-EF8EB7F36E40}
 	EndGlobalSection
 EndGlobal
