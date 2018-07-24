@@ -17,33 +17,31 @@ namespace AdvancedChat
     class AdvancedChatPlugin : RocketPlugin<AdvancedChatConfig>
     {
         public static AdvancedChatPlugin Instance;
-        private Dictionary<CSteamID, DateTime> MutedPlayersTimeStamps = new Dictionary<CSteamID, DateTime>();
-        private Dictionary<CSteamID, uint> MutedPlayers = new Dictionary<CSteamID, uint>();
-        private List<CSteamID> PermaMute = new List<CSteamID>();
-        private Dictionary<CSteamID, int> WarnedPlayers = new Dictionary<CSteamID, int>();
 
-        public override TranslationList DefaultTranslations
-        {
-            get
-            {
-                return new TranslationList()
+        public Dictionary<CSteamID, int> WarnedPlayers = new Dictionary<CSteamID, int>();
+        public Dictionary<CSteamID, Mute> Mutes = new Dictionary<CSteamID, Mute>();
+
+        public override TranslationList DefaultTranslations => new TranslationList()
                 {
                     {"kick_ban_reason", "You used blacklisted word in chat"},
-                    {"mute_broadcast", "{0} is now muted for {1} seconds"},
-                    {"permamute_broadcast", "{0} is now muted permanently"},
+                    {"mute_broadcast", "{0} is now muted for {1} by {2}"},
+                    {"permamute_broadcast", "{0} is now permamuted by {1}"},
                     {"unmute_broadcast", "{0} is now unmuted"},
-                    {"you_in_mute", "You are muted for {0} seconds"},
+                    {"you_in_mute", "You are muted for {0}"},
+                    {"you_in_permamute", "You are muted permanently"},
                     {"you_use_badword", "You used blacklisted word! This {0}/{1} your warning"},
                     {"player_not_found", "Target player not found"},
-                    {"wrong_time", "Invalid time parameter"},
-                    {"you_in_permamute", "You are muted permanently"}
+                    {"wrong_time", "Wrong time parameter!"},
+                    {"wrong_usage", "Wrong syntax!"},
+                    {"automute_reason", "Too much warnings"},
+                    {"reason_description", "Reason: {0}"},
+                    {"already_muted", "This player already muted!"},
+                    {"not_muted", "This player not muted yet!"}
                 };
-            }
-        }
 
         protected override void Load()
         {
-            Rocket.Core.Logging.Logger.Log("AdvancedChat plugin loaded");
+            Rocket.Core.Logging.Logger.Log("AdvancedChat plugin loaded!");
             Rocket.Core.Logging.Logger.Log("Broadcast mute: " + Configuration.Instance.BroadcastMute);
             Rocket.Core.Logging.Logger.Log("Broadcast unmute: " + Configuration.Instance.BroadcastUnmute);
             Rocket.Core.Logging.Logger.Log("Warnings before mute: " + Configuration.Instance.WarningsBeforeMute);
@@ -58,21 +56,21 @@ namespace AdvancedChat
 
         private void PlayerChatted(UnturnedPlayer player, ref UnityEngine.Color color, string message, EChatMode chatMode, ref bool cancel)
         {
-            int warningsBeforeMute = Configuration.Instance.WarningsBeforeMute;
-            int waringsBeforeKick = Configuration.Instance.WarningsBeforeKick;
-            int warningsBeforeBan = Configuration.Instance.WarningsBeforeBan;
+            int warnBeforeMute = Configuration.Instance.WarningsBeforeMute;
+            int warnBeforeKick = Configuration.Instance.WarningsBeforeKick;
+            int warnBeforeBan = Configuration.Instance.WarningsBeforeBan;
 
-            if (MutedPlayers.ContainsKey(player.CSteamID))
+            if (Mutes.ContainsKey(player.CSteamID))
             {
-                long last = MutedPlayersTimeStamps[player.CSteamID].Second + MutedPlayers[player.CSteamID] - DateTime.Now.Second;
-                UnturnedChat.Say(player, Translate("you_in_mute", last), UnityEngine.Color.red);
-                cancel = true;
-                return;
-            }
+                if (!Mutes[player.CSteamID].Perma)
+                {
+                    UnturnedChat.Say(player, Translate("you_in_mute", Mutes[player.CSteamID].RemainingTime), UnityEngine.Color.red);
+                }
+                else
+                {
+                    UnturnedChat.Say(player, Translate("you_in_permamute"), UnityEngine.Color.red);
+                }
 
-            if (PermaMute.Contains(player.CSteamID))
-            {
-                UnturnedChat.Say(player, Translate("you_in_permamute"), UnityEngine.Color.red);
                 cancel = true;
                 return;
             }
@@ -91,7 +89,7 @@ namespace AdvancedChat
                         {
                             WarnedPlayers.Add(player.CSteamID, 1);
                         }
-                        UnturnedChat.Say(player, Translate("you_use_badword", WarnedPlayers[player.CSteamID], warningsBeforeMute), UnityEngine.Color.red);
+                        UnturnedChat.Say(player, Translate("you_use_badword", WarnedPlayers[player.CSteamID], warnBeforeMute), UnityEngine.Color.red);
                         cancel = true;
                     }
                 }
@@ -99,9 +97,9 @@ namespace AdvancedChat
 
             if (!player.HasPermission("AdvancedChat.BypassAutoMute"))
             {
-                if (Configuration.Instance.WarningsBeforeMute > 0 && WarnedPlayers.ContainsKey(player.CSteamID) && WarnedPlayers[player.CSteamID] == warningsBeforeMute)
+                if (Configuration.Instance.WarningsBeforeMute > 0 && WarnedPlayers.ContainsKey(player.CSteamID) && WarnedPlayers[player.CSteamID] == warnBeforeMute)
                 {
-                    MutePlayer(player.CSteamID, Configuration.Instance.AutoMuteDuration);
+                    new Mute(player.CSteamID, new CSteamID(0), Configuration.Instance.AutoMuteDuration, Translate("automute_reason"));
                 }
             }
 
@@ -124,101 +122,18 @@ namespace AdvancedChat
 
         public void FixedUpdate()
         {
-            if (MutedPlayers.Count > 0 && MutedPlayersTimeStamps.Count > 0)
+            if (Mutes.Count > 0)
             {
-                foreach (KeyValuePair<CSteamID, DateTime> pair in MutedPlayersTimeStamps)
+                try
                 {
-                    if ((DateTime.Now - pair.Value).TotalSeconds >= MutedPlayers[pair.Key])
+                    foreach (KeyValuePair<CSteamID, Mute> pair in Mutes)
                     {
-                        UnmutePlayer(pair.Key);
-                        break;
+                        pair.Value.Check();
                     }
                 }
-            }
-        }
-
-        public void MutePlayer(CSteamID playerID, uint duration)
-        {
-            if (MutedPlayers.ContainsKey(playerID))
-            {
-                MutedPlayers.Remove(playerID);
-                MutedPlayersTimeStamps.Remove(playerID);
-            }
-
-            if (PermaMute.Contains(playerID))
-            {
-                PermaMute.Remove(playerID);
-            }
-
-            MutedPlayers.Add(playerID, duration);
-            MutedPlayersTimeStamps.Add(playerID, DateTime.Now);
-
-            if (Configuration.Instance.BroadcastMute)
-            {
-                UnturnedPlayer player = UnturnedPlayer.FromCSteamID(playerID);
-                try
+                catch (InvalidOperationException)
                 {
-                    UnturnedChat.Say(Translate("mute_broadcast", player.CharacterName, duration), UnityEngine.Color.magenta);
-                }
-                catch (NullReferenceException)
-                {
-                    UnturnedChat.Say(Translate("mute_broadcast:", playerID, duration), UnityEngine.Color.magenta);
-                }
-            }
-        }
-
-        public void MutePlayer(CSteamID playerID)
-        {
-            PermaMute.Add(playerID);
-
-            if (MutedPlayers.ContainsKey(playerID))
-            {
-                MutedPlayers.Remove(playerID);
-                MutedPlayersTimeStamps.Remove(playerID);
-            }
-
-            if (Configuration.Instance.BroadcastMute)
-            {
-                UnturnedPlayer player = UnturnedPlayer.FromCSteamID(playerID);
-                try
-                {
-                    UnturnedChat.Say(Translate("permamute_broadcast", player.CharacterName), UnityEngine.Color.magenta);
-                }
-                catch (NullReferenceException)
-                {
-                    UnturnedChat.Say(Translate("permamute_broadcast", playerID), UnityEngine.Color.magenta);
-                }
-            }
-        }
-
-        public void UnmutePlayer(CSteamID playerID)
-        {
-            bool flag = true;
-            if (MutedPlayers.ContainsKey(playerID))
-            {
-                MutedPlayers.Remove(playerID);
-                MutedPlayersTimeStamps.Remove(playerID);
-                flag = false;
-            }
-
-            if (PermaMute.Contains(playerID))
-            {
-                PermaMute.Remove(playerID);
-                flag = false;
-            }
-
-            if (flag) { return; }
-
-            if (Configuration.Instance.BroadcastUnmute)
-            {
-                UnturnedPlayer player = UnturnedPlayer.FromCSteamID(playerID);
-                try
-                {
-                    UnturnedChat.Say(Translate("unmute_broadcast", player.CharacterName), UnityEngine.Color.magenta);
-                }
-                catch (NullReferenceException)
-                {
-                    UnturnedChat.Say(Translate("unmute_broadcast", playerID), UnityEngine.Color.magenta);
+                    return;
                 }
             }
         }
@@ -226,7 +141,7 @@ namespace AdvancedChat
         protected override void Unload()
         {
             UnturnedPlayerEvents.OnPlayerChatted -= PlayerChatted;
-            Rocket.Core.Logging.Logger.Log("AdvancedChat plugin unloaded");
+            Rocket.Core.Logging.Logger.Log("AdvancedChat plugin unloaded!");
         }
     }
 }

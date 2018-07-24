@@ -13,7 +13,7 @@ namespace AdvancedChat
         public int WarningsBeforeMute;
         public int WarningsBeforeKick;
         public int WarningsBeforeBan;
-        public uint AutoMuteDuration;
+        public int AutoMuteDuration;
         public uint AutoBanDuration;
         public List<string> WordsBlackList;
 

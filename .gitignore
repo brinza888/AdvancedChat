@@ -6,3 +6,5 @@
 \.vs/AdvancedChat/v15/Server/sqlite3/
 
 *.ide-wal
+
+\.vs/

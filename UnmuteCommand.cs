@@ -30,7 +30,14 @@ namespace AdvancedChat
             }
             else
             {
-                AdvancedChatPlugin.Instance.UnmutePlayer(target.CSteamID);
+                if (AdvancedChatPlugin.Instance.Mutes.ContainsKey(target.CSteamID))
+                {
+                    AdvancedChatPlugin.Instance.Mutes[target.CSteamID].Unmute();
+                }
+                else
+                {
+                    UnturnedChat.Say(caller, AdvancedChatPlugin.Instance.Translate("not_muted"), UnityEngine.Color.red);
+                }
             }
         }
 
