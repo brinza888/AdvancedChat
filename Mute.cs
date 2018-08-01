@@ -10,6 +10,33 @@ namespace AdvancedChat
 {
     public class Mute
     {
+        private static Dictionary<CSteamID, Mute> mutes = new Dictionary<CSteamID, Mute>();
+
+        public static bool IsMuted(CSteamID id)
+        {
+            return mutes.ContainsKey(id);
+        }
+
+        public static Mute GetMute(CSteamID id)
+        {
+            return mutes[id];
+        }
+
+        public static void UpdateMutes()
+        {
+            try
+            {
+                foreach (KeyValuePair<CSteamID, Mute> m in mutes)
+                {
+                    m.Value.Check();
+                }
+            }
+            catch (InvalidOperationException)
+            {
+                return;
+            }
+        }
+
         public DateTime TimeStamp { get; private set; }
         public int Seconds { get; private set; }
         public CSteamID PlayerID { get; private set; }
@@ -25,8 +52,8 @@ namespace AdvancedChat
             Reason = reason;
             JudgeID = judge;
             Perma = false;
+            mutes.Add(PlayerID, this);
 
-            AdvancedChatPlugin.Instance.Mutes.Add(PlayerID, this);
             if (AdvancedChatPlugin.Instance.Configuration.Instance.BroadcastMute)
             {
                 UnturnedChat.Say(AdvancedChatPlugin.Instance.Translate("mute_broadcast", PlayerName, Seconds, JudgeName), UnityEngine.Color.magenta);
@@ -44,7 +71,7 @@ namespace AdvancedChat
             Perma = true;
             Reason = reason;
             JudgeID = judge;
-            AdvancedChatPlugin.Instance.Mutes.Add(PlayerID, this);
+            mutes.Add(PlayerID, this);
 
             if (AdvancedChatPlugin.Instance.Configuration.Instance.BroadcastMute)
             {
@@ -72,10 +99,7 @@ namespace AdvancedChat
 
         public void Unmute()
         {
-            if (AdvancedChatPlugin.Instance.Mutes.ContainsKey(PlayerID))
-            {
-                AdvancedChatPlugin.Instance.Mutes.Remove(PlayerID);
-            }
+            mutes.Remove(PlayerID);
 
             if (AdvancedChatPlugin.Instance.Configuration.Instance.BroadcastUnmute)
             {
@@ -111,7 +135,7 @@ namespace AdvancedChat
                 }
                 catch (NullReferenceException)
                 {
-                    return PlayerID.ToString();
+                    return JudgeID.ToString();
                 }
             }
         }

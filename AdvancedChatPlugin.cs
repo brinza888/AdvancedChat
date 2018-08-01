@@ -19,11 +19,9 @@ namespace AdvancedChat
         public static AdvancedChatPlugin Instance;
 
         public Dictionary<CSteamID, int> WarnedPlayers = new Dictionary<CSteamID, int>();
-        public Dictionary<CSteamID, Mute> Mutes = new Dictionary<CSteamID, Mute>();
 
         public override TranslationList DefaultTranslations => new TranslationList()
                 {
-                    {"kick_ban_reason", "You used blacklisted word in chat"},
                     {"mute_broadcast", "{0} is now muted for {1} by {2}"},
                     {"permamute_broadcast", "{0} is now permamuted by {1}"},
                     {"unmute_broadcast", "{0} is now unmuted"},
@@ -36,7 +34,8 @@ namespace AdvancedChat
                     {"automute_reason", "Too much warnings"},
                     {"reason_description", "Reason: {0}"},
                     {"already_muted", "This player already muted!"},
-                    {"not_muted", "This player not muted yet!"}
+                    {"not_muted", "This player not muted yet!"},
+                    {"player_hasnt_warnings", "This player hasn't warnings yet!"}
                 };
 
         protected override void Load()
@@ -57,20 +56,17 @@ namespace AdvancedChat
         private void PlayerChatted(UnturnedPlayer player, ref UnityEngine.Color color, string message, EChatMode chatMode, ref bool cancel)
         {
             int warnBeforeMute = Configuration.Instance.WarningsBeforeMute;
-            int warnBeforeKick = Configuration.Instance.WarningsBeforeKick;
-            int warnBeforeBan = Configuration.Instance.WarningsBeforeBan;
 
-            if (Mutes.ContainsKey(player.CSteamID))
+            if (Mute.IsMuted(player.CSteamID))
             {
-                if (!Mutes[player.CSteamID].Perma)
+                if (!Mute.GetMute(player.CSteamID).Perma)
                 {
-                    UnturnedChat.Say(player, Translate("you_in_mute", Mutes[player.CSteamID].RemainingTime), UnityEngine.Color.red);
+                    UnturnedChat.Say(player, Translate("you_in_mute", Mute.GetMute(player.CSteamID).RemainingTime), UnityEngine.Color.red);
                 }
                 else
                 {
                     UnturnedChat.Say(player, Translate("you_in_permamute"), UnityEngine.Color.red);
                 }
-
                 cancel = true;
                 return;
             }
@@ -95,47 +91,19 @@ namespace AdvancedChat
                 }
             }
 
-            if (!player.HasPermission("AdvancedChat.BypassAutoMute"))
+            if (warnBeforeMute > 0 && !player.HasPermission("AdvancedChat.BypassAutoMute"))
             {
-                if (Configuration.Instance.WarningsBeforeMute > 0 && WarnedPlayers.ContainsKey(player.CSteamID) && WarnedPlayers[player.CSteamID] == warnBeforeMute)
+                if (WarnedPlayers.ContainsKey(player.CSteamID) && WarnedPlayers[player.CSteamID] == warnBeforeMute)
                 {
                     new Mute(player.CSteamID, new CSteamID(0), Configuration.Instance.AutoMuteDuration, Translate("automute_reason"));
-                }
-            }
-
-            if (!player.HasPermission("AdvancedChat.BypassAutoKick"))
-            {
-                if (Configuration.Instance.WarningsBeforeKick > 0 && WarnedPlayers.ContainsKey(player.CSteamID) && WarnedPlayers[player.CSteamID] == Configuration.Instance.WarningsBeforeKick)
-                {
-                    player.Kick(Translate("kick_ban_reason"));
-                }
-            }
-
-            if (!player.HasPermission("AdvancedChat.BypassAutoBan"))
-            {
-                if (Configuration.Instance.WarningsBeforeBan > 0 && WarnedPlayers.ContainsKey(player.CSteamID) && WarnedPlayers[player.CSteamID] == Configuration.Instance.WarningsBeforeBan)
-                {
-                    player.Ban(Translate("kick_ban_reason"), Configuration.Instance.AutoBanDuration);
+                    Instance.WarnedPlayers.Remove(player.CSteamID);
                 }
             }
         }
 
         public void FixedUpdate()
         {
-            if (Mutes.Count > 0)
-            {
-                try
-                {
-                    foreach (KeyValuePair<CSteamID, Mute> pair in Mutes)
-                    {
-                        pair.Value.Check();
-                    }
-                }
-                catch (InvalidOperationException)
-                {
-                    return;
-                }
-            }
+            Mute.UpdateMutes();
         }
 
         protected override void Unload()

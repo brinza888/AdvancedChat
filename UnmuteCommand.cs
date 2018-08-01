@@ -30,9 +30,9 @@ namespace AdvancedChat
             }
             else
             {
-                if (AdvancedChatPlugin.Instance.Mutes.ContainsKey(target.CSteamID))
+                if (Mute.IsMuted(target.CSteamID))
                 {
-                    AdvancedChatPlugin.Instance.Mutes[target.CSteamID].Unmute();
+                    Mute.GetMute(target.CSteamID).Unmute();
                 }
                 else
                 {

@@ -39,7 +39,7 @@ namespace AdvancedChat
                 UnturnedChat.Say(caller, AdvancedChatPlugin.Instance.Translate("player_not_found"), UnityEngine.Color.red);
                 return;
             }
-            if (AdvancedChatPlugin.Instance.Mutes.ContainsKey(target.CSteamID))
+            if (Mute.IsMuted(target.CSteamID))
             {
                 UnturnedChat.Say(caller, AdvancedChatPlugin.Instance.Translate("already_muted"), UnityEngine.Color.red);
                 return;

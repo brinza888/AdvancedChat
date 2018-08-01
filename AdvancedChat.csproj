@@ -60,6 +60,7 @@
   <ItemGroup>
     <Compile Include="AdvancedChatConfig.cs" />
     <Compile Include="AdvancedChatPlugin.cs" />
+    <Compile Include="CWarnsCommand.cs" />
     <Compile Include="Mute.cs" />
     <Compile Include="MuteCommand.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
