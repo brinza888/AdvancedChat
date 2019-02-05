@@ -44,7 +44,7 @@ namespace AdvancedChat
         public String Reason { get; private set; }
         public bool Perma { get; private set; }
 
-        public Mute(CSteamID player, CSteamID judge, int seconds, String reason = "*none*")
+        public Mute(CSteamID player, CSteamID judge, int seconds, String reason = null)
         {
             TimeStamp = DateTime.Now;
             PlayerID = player;
@@ -58,13 +58,11 @@ namespace AdvancedChat
             {
                 UnturnedChat.Say(AdvancedChatPlugin.Instance.Translate("mute_broadcast", PlayerName, Seconds, JudgeName), UnityEngine.Color.magenta);
                 if (reason != "*none*")
-                {
                     UnturnedChat.Say(AdvancedChatPlugin.Instance.Translate("reason_description", Reason), UnityEngine.Color.magenta);
-                }
             }
         }
 
-        public Mute(CSteamID player, CSteamID judge, String reason = "*none*")
+        public Mute(CSteamID player, CSteamID judge, String reason = null)
         {
             TimeStamp = DateTime.Now;
             PlayerID = player;
@@ -77,24 +75,18 @@ namespace AdvancedChat
             {
                 UnturnedChat.Say(AdvancedChatPlugin.Instance.Translate("permamute_broadcast", PlayerName, JudgeName), UnityEngine.Color.magenta);
                 if (reason != "*none*")
-                {
                     UnturnedChat.Say(AdvancedChatPlugin.Instance.Translate("reason_description", Reason), UnityEngine.Color.magenta);
-                }  
             }
         }
 
         public void Check()
         {
             if (Perma)
-            {
                 return;
-            }
 
             TimeSpan result = DateTime.Now - TimeStamp;
             if (result.TotalSeconds >= Seconds)
-            {
                 Unmute();
-            }
         }
 
         public void Unmute()
@@ -102,10 +94,7 @@ namespace AdvancedChat
             mutes.Remove(PlayerID);
 
             if (AdvancedChatPlugin.Instance.Configuration.Instance.BroadcastUnmute)
-            {
                 UnturnedChat.Say(AdvancedChatPlugin.Instance.Translate("unmute_broadcast", PlayerName), UnityEngine.Color.magenta);
-            }
-            
         }
 
         public string PlayerName

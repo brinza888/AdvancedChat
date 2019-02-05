@@ -33,6 +33,7 @@ namespace AdvancedChat
             {
                 judgeID = new CSteamID();
             }
+
             UnturnedPlayer target = command.GetUnturnedPlayerParameter(0);
             if (target == null)
             {
@@ -44,6 +45,7 @@ namespace AdvancedChat
                 UnturnedChat.Say(caller, AdvancedChatPlugin.Instance.Translate("already_muted"), UnityEngine.Color.red);
                 return;
             }
+
             switch (command.Length)
             {
                 case 1:
@@ -52,19 +54,16 @@ namespace AdvancedChat
                 case 2:
                     int seconds;
                     if (int.TryParse(command[1], out seconds))
-                    {
                         new Mute(target.CSteamID, judgeID, seconds);
-                    }
                     else
-                    {
                         new Mute(target.CSteamID, judgeID, reason: command[1]);
-                    }
                     break;
                 case 3:
                     int time;
                     if (!int.TryParse(command[1], out time))
                     {
                         UnturnedChat.Say(caller, AdvancedChatPlugin.Instance.Translate("wrong_time"), UnityEngine.Color.red);
+                        return;
                     }
                     new Mute(target.CSteamID, judgeID, time, command[2]);
                     break;

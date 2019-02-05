@@ -23,4 +23,3 @@ C:\Users\Илья\Documents\Visual Studio 2017\Projects\AdvancedChat\bin\Debug\R
 C:\Users\Илья\Documents\Visual Studio 2017\Projects\AdvancedChat\bin\Debug\Rocket.Unturned.dll
 C:\Users\Илья\Documents\Visual Studio 2017\Projects\AdvancedChat\bin\Debug\UnityEngine.dll
 C:\Users\Илья\Documents\Visual Studio 2017\Projects\AdvancedChat\obj\Debug\AdvancedChat.csproj.CopyComplete
-C:\Users\Илья\Documents\Visual Studio 2017\Projects\AdvancedChat\obj\Debug\AdvancedChat.csprojAssemblyReference.cache

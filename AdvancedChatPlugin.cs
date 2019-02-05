@@ -43,9 +43,8 @@ namespace AdvancedChat
             Rocket.Core.Logging.Logger.Log("AdvancedChat plugin loaded!");
             Rocket.Core.Logging.Logger.Log("Broadcast mute: " + Configuration.Instance.BroadcastMute);
             Rocket.Core.Logging.Logger.Log("Broadcast unmute: " + Configuration.Instance.BroadcastUnmute);
-            Rocket.Core.Logging.Logger.Log("Warnings before mute: " + Configuration.Instance.WarningsBeforeMute);
+            Rocket.Core.Logging.Logger.Log("Warnings before mute: " + Configuration.Instance.MaxWarnings);
             Rocket.Core.Logging.Logger.Log("AutoMute duration: " + Configuration.Instance.AutoMuteDuration);
-            Rocket.Core.Logging.Logger.Log("AutoBan duration: " + Configuration.Instance.AutoBanDuration);
             Rocket.Core.Logging.Logger.Log("Created by Brinza Bezrukoff");
             Rocket.Core.Logging.Logger.Log("Vk: vk.com/brinza888");
             Rocket.Core.Logging.Logger.Log("Mail: bezrukoff888@gmail.com");
@@ -55,18 +54,14 @@ namespace AdvancedChat
 
         private void PlayerChatted(UnturnedPlayer player, ref UnityEngine.Color color, string message, EChatMode chatMode, ref bool cancel)
         {
-            int warnBeforeMute = Configuration.Instance.WarningsBeforeMute;
+            int maxWarnings = Configuration.Instance.MaxWarnings;
 
             if (Mute.IsMuted(player.CSteamID))
             {
                 if (!Mute.GetMute(player.CSteamID).Perma)
-                {
                     UnturnedChat.Say(player, Translate("you_in_mute", Mute.GetMute(player.CSteamID).RemainingTime), UnityEngine.Color.red);
-                }
                 else
-                {
                     UnturnedChat.Say(player, Translate("you_in_permamute"), UnityEngine.Color.red);
-                }
                 cancel = true;
                 return;
             }
@@ -78,22 +73,18 @@ namespace AdvancedChat
                     if (message.ToLower().Contains(badword.ToLower()))
                     {
                         if (WarnedPlayers.ContainsKey(player.CSteamID))
-                        {
                             WarnedPlayers[player.CSteamID] += 1;
-                        }
                         else
-                        {
                             WarnedPlayers.Add(player.CSteamID, 1);
-                        }
-                        UnturnedChat.Say(player, Translate("you_use_badword", WarnedPlayers[player.CSteamID], warnBeforeMute), UnityEngine.Color.red);
+                        UnturnedChat.Say(player, Translate("you_use_badword", WarnedPlayers[player.CSteamID], maxWarnings), UnityEngine.Color.red);
                         cancel = true;
                     }
                 }
             }
 
-            if (warnBeforeMute > 0 && !player.HasPermission("AdvancedChat.BypassAutoMute"))
+            if (maxWarnings > 0 && !player.HasPermission("AdvancedChat.BypassAutoMute"))
             {
-                if (WarnedPlayers.ContainsKey(player.CSteamID) && WarnedPlayers[player.CSteamID] == warnBeforeMute)
+                if (WarnedPlayers.ContainsKey(player.CSteamID) && WarnedPlayers[player.CSteamID] == maxWarnings)
                 {
                     new Mute(player.CSteamID, new CSteamID(0), Configuration.Instance.AutoMuteDuration, Translate("automute_reason"));
                     Instance.WarnedPlayers.Remove(player.CSteamID);

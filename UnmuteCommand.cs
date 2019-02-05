@@ -25,20 +25,12 @@ namespace AdvancedChat
         {
             UnturnedPlayer target = command.GetUnturnedPlayerParameter(0);
             if (target == null)
-            {
                 UnturnedChat.Say(caller, AdvancedChatPlugin.Instance.Translate("player_not_found"), UnityEngine.Color.red);
-            }
             else
-            {
                 if (Mute.IsMuted(target.CSteamID))
-                {
                     Mute.GetMute(target.CSteamID).Unmute();
-                }
                 else
-                {
                     UnturnedChat.Say(caller, AdvancedChatPlugin.Instance.Translate("not_muted"), UnityEngine.Color.red);
-                }
-            }
         }
 
         public string Help
