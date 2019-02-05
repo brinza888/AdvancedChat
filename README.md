@@ -4,42 +4,35 @@
 ## Commands
 - ### Mute command
   Use for **mute** player in chat
-  - Syntax: /mute [player] [seconds] or /mute [player]
-    - First usage mutes player for seconds
-    - Second usage mutes player permanently
+  - Syntax:
+    - /mute <nick> <duration> <reason> - mute for duration (in sec) and with reason.
+    - /mute <nick>  <reason> - mute permanently with reason
+    - /mute <nick> <duration> - mute for duration(in sec) without reason
+    - /mute <nick> - mute permanently without reason
   - Permission: AdvancedChat.Mute
 - ### Unmute command
   Use for **unmute** player in chat
-  - Syntax: /umute [player]
+  - Syntax: /umute <nick>
   - Permission: AdvancedChat.Unmute
 ## Plugin systems
 - ### Blacklisted words
   - If player message contains **blacklisted word**, message will not be sent
   - Also player, who used **blacklisted word** will get **warning**
 - ### Warnings
-  - If player has defined **warnings** count he will get:
-    - Auto mute
-    - Auto kick
-    - Auto ban
-## Plugin setup
+  - If player has defined **warnings** count he will get automute for defined duration with defined reason
+## Plugin configure
 - ### Permissions
   - AdvancedChat.Mute - /mute command permission
   - AdvancedChat.Unmute - /unmute command permission
   - AdvancedChat.BypassBadWords - allows use in chat **blacklisted words** for the player
-  - AdvancedChat.BypassAutoMute - **Auto mute** punishment will not be applied to the player
-  - AdvancedChat.BypassAutoKick - **Auto kick** punishment will not be applied to the player
-  - AdvancedChat.BypassAutoBan - **Auto ban** punishment will not be applied to the player
+  - AdvancedChat.BypassAutoMute - **automute** punishment will not be applied to the player
 - ### Configuration
   - BroadcastMute - if true plugin will announce about player's mute
   - BroadcastUnmute - if true plugin will announce about player's unmute
-  - WarningsBeforeMute - how many warnings player need to get before plugin will **auto mute** him
-  - WarningsBeforeKick - how many warnings player need to get before plugin will **auto kick** him
-  - WarningsBeforeBan - how many warnings player need to get before plugin will **auto ban** him
-  - AutoMuteDuration - duration of **auto mute**
-  - AutoBanDuration - duration of **auto ban**
+  - WarningsBeforeMute - how many warnings player need to get before plugin will **automute** him
+  - AutoMuteDuration - duration of **automute**
   - WordsBlackList - list of all **blacklisted words**
 - ### Translations
-  - kick_ban_reason - reason that will be marked, if player gets **auto kick/ban**
   - mute_broadcast - message that will be broadcast, if player gets mute (if **BroadcastMute** configuration true
     - {0} is a player name
     - {1} is mute time
