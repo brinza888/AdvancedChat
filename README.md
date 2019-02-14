@@ -5,14 +5,14 @@
 - ### Mute command
   Use for **mute** player in chat
   - Syntax:
-    - /mute <nick> <duration> <reason> - mute for duration (in sec) and with reason.
-    - /mute <nick>  <reason> - mute permanently with reason
-    - /mute <nick> <duration> - mute for duration(in sec) without reason
-    - /mute <nick> - mute permanently without reason
+    - /mute [nick] [duration] [reason] - mute for duration (in sec) and with reason
+    - /mute [nick] [duration] - mute for duration(in sec) without reason
+    - /mute [nick]  [reason] - mute permanently with reason
+    - /mute [nick] - mute permanently without reason
   - Permission: AdvancedChat.Mute
 - ### Unmute command
   Use for **unmute** player in chat
-  - Syntax: /umute <nick>
+  - Syntax: /umute [nick]
   - Permission: AdvancedChat.Unmute
 ## Plugin systems
 - ### Blacklisted words
