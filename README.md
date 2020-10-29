@@ -1,5 +1,6 @@
 # AdvancedChat
 ##### AdvancedChat is Unturned plugin for Rocket.This plugin is similar to the ChatControl plugin, but AdvancedChat is modified version of ChatControl, I did not want to steal the ChatControl plugin idea, I just modified it!
+##### This software is licensed under the BSD 3-Clause License (see LICENSE file)
 ---
 ## Commands
 - ### Mute command
