@@ -1,7 +1,21 @@
 # AdvancedChat
-##### AdvancedChat is Unturned plugin for Rocket.This plugin is similar to the ChatControl plugin, but AdvancedChat is modified version of ChatControl, I did not want to steal the ChatControl plugin idea, I just modified it!
-##### This software is licensed under the BSD 3-Clause License (see LICENSE file)
----
+
+**This one plugin may not work now, because of outdated code or old build.**
+
+AdvancedChat is Rocket plugin for Unturned. This plugin is modified version of famous ChatControl plugin. It was created independently and without using ANY part of ChatControl source code.
+
+Features:
+- Mute duration
+- Mute reason
+- Words blacklist and automute
+- Mute broadcasting
+
+Plugin AdvancedChat created by Ilya Bezrukov:
+- My telegram: https://t.me/brinza888
+- My email: bezrukoff888@gmail.com
+
+**This software is licensed under the BSD 3-Clause License (see LICENSE file).**
+
 ## Commands
 - ### Mute command
   Use for **mute** player in chat
@@ -48,6 +62,3 @@
     - {1} is warnings that player need to reach for get **automute**
   - player_not_found - error message, if you incorrect define player in /mute or /unmute commands
   - wrong_time - errror message, if you incorrect define time in /mute command (eg string instead number)
-- Plugin AdvancedChat created by Brinza Bezrukoff
-- My Vk page: https://vk.com/brinza888
-- My email: bezrukoff888@gmail.com
